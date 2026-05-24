@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
-  Target, Activity, BarChart2, Cpu, Database, 
+  Target, Activity, Cpu, Database, 
   Settings, LogOut, Shield, Zap, Globe, 
-  ChevronRight, Calculator, PieChart, TrendingUp,
-  Video, Search, UploadCloud, FileJson, Key, HardDrive, Upload
+  ChevronRight, TrendingUp,
+  Video, Search, UploadCloud, Key, HardDrive, Upload, FileText, ImageIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { cn } from '../lib/utils';
+import { cn } from './lib/utils';
 import { useNavigate } from 'react-router-dom';
 
 // TradingView Widget Component

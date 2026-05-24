@@ -1,7 +1,6 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+import LoginPage from './LoginPage';
+import SignupPage from './SignupPage';
 
 // Placeholder for the main terminal page
 const TerminalPage = () => (

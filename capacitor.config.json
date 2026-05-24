@@ -1,0 +1,6 @@
+{
+  "appId": "com.elitesignal.app",
+  "appName": "EliteSignal",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

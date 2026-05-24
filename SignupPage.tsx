@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Target, Lock, Mail, User, ArrowRight, ShieldCheck, UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { Lock, Mail, User, ArrowRight, ShieldCheck, UserPlus } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 
