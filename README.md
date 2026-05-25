@@ -196,6 +196,91 @@ Vercel project settings checklist
 
 > Note: This deploys only the frontend UI. The FastAPI backend in `main.py` must be hosted separately, and the frontend will call it using `VITE_API_URL`.
 
+Backend hosting options
+
+If you want a production backend host, use one of these recommended providers:
+
+1. Render
+   - URL: https://render.com
+   - Sign in with GitHub and click **New +** > **Web Service**.
+   - Connect the `manierkendall-svg/Elite-Signals` repository.
+   - Service name: `elitesignal-backend`.
+   - Branch: `main`.
+   - Build Command: `pip install -r requirements.txt`.
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Plan: free or starter tier.
+   - Set environment variables in Render:
+     - `SECRET_KEY`
+     - `DATABASE_URL` (if using Postgres)
+     - `PYTHONUNBUFFERED=1`
+
+2. Railway
+   - URL: https://railway.app
+   - Sign in with GitHub and create a new project.
+   - Choose **Deploy from GitHub repo**.
+   - Select `manierkendall-svg/Elite-Signals`.
+   - Environment: `root directory = .`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Add the same environment variables as above.
+
+3. Heroku (optional)
+   - URL: https://www.heroku.com
+   - Create a new app and connect your GitHub repo.
+   - Buildpack: `python`.
+   - Procfile content: `web: uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Set `SECRET_KEY` and database variables in Settings.
+
+Programs and packages
+
+- Git: https://git-scm.com/
+- Node.js + npm: https://nodejs.org/
+- Python 3: https://www.python.org/
+- Vercel: https://vercel.com/
+- Vercel CLI: `npm install -g vercel`
+- FastAPI: https://fastapi.tiangolo.com/
+- Uvicorn: https://www.uvicorn.org/
+- SQLAlchemy: https://www.sqlalchemy.org/
+- passlib: https://passlib.readthedocs.io/
+- python-jose: https://python-jose.readthedocs.io/
+- python-multipart: https://github.com/tiangolo/fastapi#installation
+- Render: https://render.com
+- Railway: https://railway.app
+
+Required Python packages (from `requirements.txt`):
+
+- `fastapi`
+- `uvicorn[standard]`
+- `sqlalchemy`
+- `passlib[bcrypt]`
+- `python-jose[cryptography]`
+- `python-multipart`
+- `aiofiles`
+- `python-dotenv`
+- `psycopg2-binary` (PostgreSQL only)
+
+Required Node packages (from `package.json`):
+
+- `@tailwindcss/vite`
+- `axios`
+- `lucide-react`
+- `motion`
+- `react`
+- `react-dom`
+- `react-router-dom`
+- `tailwindcss`
+- `@eslint/js`
+- `@types/node`
+- `@types/react`
+- `@types/react-dom`
+- `@vitejs/plugin-react`
+- `eslint`
+- `eslint-plugin-react-hooks`
+- `eslint-plugin-react-refresh`
+- `globals`
+- `typescript`
+- `typescript-eslint`
+- `vite`
+
 GitHub Actions build
 
 - This repo includes a GitHub Actions workflow at `.github/workflows/build-frontend.yml`.
