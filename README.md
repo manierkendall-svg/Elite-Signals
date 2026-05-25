@@ -106,16 +106,21 @@ Vercel deployment (recommended)
 
 1. Push this repository to GitHub.
 2. Sign in to Vercel and import the repository.
-3. Use the default build command:
+3. Configure the project using these exact values:
 
-```bash
-npm run build
-```
+- Root Directory: leave blank or set to `/`
+- Framework Preset: `Vite`
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `dist`
 
-4. Confirm the output directory is `dist`.
+4. Add the frontend environment variable:
+
+- `VITE_API_URL` = `https://your-backend.example.com`
+
 5. Deploy the site. Vercel will host the frontend and provide a public URL.
 
-> Note: This deploys only the frontend UI. The FastAPI backend in `main.py` needs separate hosting.
+> Note: This deploys only the frontend UI. The FastAPI backend in `main.py` needs separate hosting. The frontend now uses `VITE_API_URL` to locate the backend if configured.
 
 GitHub Actions build
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Lock, Mail, User, ArrowRight, ShieldCheck, UserPlus } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiFetch } from './lib/api';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -9,13 +10,26 @@ export default function SignupPage() {
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would call the FastAPI backend
-    console.log('Signing up...', { username, email, password });
-    // For now, simulate success
-    alert('Account request submitted. Approving operator...');
-    navigate('/login');
+
+    try {
+      const response = await apiFetch('/api/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.detail || 'Signup failed.');
+      }
+
+      alert('Account request submitted. Approving operator...');
+      navigate('/login');
+    } catch (err) {
+      console.error('Signup error:', err);
+      alert('Signup failed. Check backend connection.');
+    }
   };
 
   return (
