@@ -2,11 +2,11 @@
 
 > Local prototype for the EliteSignal interface (React + Vite) and a minimal FastAPI backend.
 
-Summary
+## Summary
 - Frontend: React + TypeScript + Vite + TailwindCSS. Interactive login/signup UI and a rich 'Terminal' dashboard.
 - Backend: FastAPI prototype (single-file `main.py`) with simple auth, a signal analysis endpoint and API-key vault stubs.
 
-Quick start (frontend)
+## ⚡ Quick start (frontend)
 
 1. Install dependencies
 
@@ -22,11 +22,11 @@ npm run dev
 # open http://localhost:5173
 ```
 
-Termux build on Android
+## 📱 Termux build on Android
 
 This repository can be built inside Termux on Android for the frontend UI and a local FastAPI backend prototype. The commands below assume a working Termux environment and Android storage permissions if you clone outside Termux's home directory.
 
-Quick Termux command list
+### 📋 Quick Termux command list
 
 ```bash
 pkg update && pkg upgrade -y
@@ -42,7 +42,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Full Termux build guide
+### 🧰 Full Termux build guide
 
 1. Install Termux from F-Droid, then open it.
 2. Update Termux packages:
@@ -96,17 +96,17 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 The API will be available at `http://127.0.0.1:8000` and the frontend build output is in `dist`.
 
-Notes for Termux
+### 📝 Notes for Termux
 
 - Termux runs on Android and may require `termux-setup-storage` for shared storage access.
 - If `npm install` fails, ensure `nodejs` is installed and use `npm cache clean --force` before retrying.
 - For backend usage, `psycopg2-binary` may have platform-specific limitations on Android. If you only need the local prototype, the backend can run with SQLite without Postgres.
 
-🚀 Vercel deployment (recommended)
+## 🚀 Vercel deployment (recommended)
 
 This repo is ready for Vercel because it is a Vite frontend app that builds into `dist`.
 
-Exact Vercel import steps
+### 🌐 Exact Vercel import steps
 
 1. Visit `https://vercel.com`.
 2. Click **Log in** and choose **GitHub**.
@@ -149,7 +149,7 @@ If Vercel does not auto-detect Vite, choose the preset manually:
 - Build Command: `npm run build`
 - Output Directory: `dist`
 
-💻 Vercel CLI deployment
+## 💻 Vercel CLI deployment
 
 If you prefer to deploy from the command line, install the Vercel CLI and answer the prompts exactly as shown:
 
@@ -233,7 +233,7 @@ Follow this exact order for a working full-stack deployment:
 - ✅ The React frontend can call backend endpoints.
 - ✅ No blocked network requests or CORS errors in console.
 
-🛠️ Backend hosting options
+## 🛠️ Backend hosting options
 
 If you want a production backend host, use one of these recommended providers:
 
@@ -267,7 +267,7 @@ If you want a production backend host, use one of these recommended providers:
    - Procfile content: `web: uvicorn main:app --host 0.0.0.0 --port $PORT`.
    - Set `SECRET_KEY` and database variables in Settings.
 
-📦 Programs and packages
+## 📦 Programs and packages
 
 - Git: https://git-scm.com/
 - Node.js + npm: https://nodejs.org/
@@ -318,37 +318,37 @@ Required Node packages (from `package.json`):
 - `typescript-eslint`
 - `vite`
 
-GitHub Actions build
+## 🧪 GitHub Actions build
 
 - This repo includes a GitHub Actions workflow at `.github/workflows/build-frontend.yml`.
 - The workflow runs on pushes and pull requests to `main`, installs dependencies, builds the Vite app, and uploads the `dist` folder as an artifact.
 - Use this for automatic CI builds even if you do not connect to Vercel.
 
-Android APK build
+## 📱 Android APK build
 
 - A second workflow is available at `.github/workflows/build-android-apk.yml`.
 - It installs Capacitor, initializes an Android project, syncs the built web assets, and builds a release APK.
 - After the workflow succeeds, the APK artifact is uploaded as `elite-signal-android-apk`.
 
-Vercel step
+## 🧩 Vercel step
 
 - You do not need to run the build locally to deploy to Vercel. Vercel will build the repo automatically after you connect it.
 - The only action required from you is to sign in to Vercel and link this GitHub repository.
 - After the first deploy, Vercel will redeploy on every push to your connected branch.
 
-APK / AAB via CI (future)
+## 📦 APK / AAB via CI (future)
 
 - This repo currently builds the web app for deployment and produces a `dist` artifact.
 - To turn it into a true Android APK/AAB, the next step is to add Capacitor or a TWA wrapper and Android SDK build actions.
 - I can help you add that when you are ready, but the current setup already prepares the frontend build and Vercel hosting.
 
-PWA installable app
+## 🌐 PWA installable app
 
 - The frontend now includes a basic `manifest.json` and service worker stub.
 - After deployment, open the site in Chrome and use “Add to Home screen” to install the app.
 - The PWA gives the site a more app-like experience on Android.
 
-Quick start (backend)
+## ⚙️ Quick start (backend)
 
 1. Create a virtualenv and install runtime deps
 
@@ -365,13 +365,13 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 # or: python main.py
 ```
 
-Important files
+## 📌 ## 📌 Important files
 - `App.tsx` — router and routes for `/login`, `/signup`, `/terminal`.
 - `LoginPage.tsx`, `SignupPage.tsx`, `TerminalPage.tsx` — UI pages (present in repo root).
 - `main.py` — FastAPI prototype and example endpoints (`/token`, `/api/signals/analyze`, `/api/vault/keys`).
 - `package.json` — frontend scripts (`dev`, `build`, `preview`) and dependencies.
 
-Notes & developer TODOs
+### 📝 Notes & developer TODOs
 - Default / example credentials and secrets are hard-coded in the prototype:
   - Frontend login form checks for: `admin@elitesignal.ai` / `EliteSniper_2026_Access` (client-side stub).
   - Backend token endpoint accepts: `admin_master` / `EliteSniper_2026_Access` and uses `SECRET_KEY = "ELITE_SNIPER_SECRET_QUANTUM_KEY"` in `main.py`.
