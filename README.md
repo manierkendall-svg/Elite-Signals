@@ -22,6 +22,86 @@ npm run dev
 # open http://localhost:5173
 ```
 
+Termux build on Android
+
+This repository can be built inside Termux on Android for the frontend UI and a local FastAPI backend prototype. The commands below assume a working Termux environment and Android storage permissions if you clone outside Termux's home directory.
+
+Quick Termux command list
+
+```bash
+pkg update && pkg upgrade -y
+pkg install git nodejs python
+cd ~/storage/shared
+git clone https://github.com/manierkendall-svg/Elite-Signals.git
+cd Elite-Signals
+npm install
+npm run build
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Full Termux build guide
+
+1. Install Termux from F-Droid, then open it.
+2. Update Termux packages:
+
+```bash
+pkg update && pkg upgrade -y
+```
+
+3. Install required tooling:
+
+```bash
+pkg install git nodejs python
+```
+
+If `nodejs` is unavailable, try `pkg install nodejs-lts`.
+
+4. Clone this repository into Termux home or Android shared storage:
+
+```bash
+cd ~
+git clone https://github.com/manierkendall-svg/Elite-Signals.git
+cd Elite-Signals
+```
+
+If you prefer Android shared storage, grant storage access with `termux-setup-storage` first and then use `cd ~/storage/shared`.
+
+5. Install frontend dependencies and build the app:
+
+```bash
+npm install
+npm run build
+```
+
+This produces the static frontend output in `dist`.
+
+6. (Optional) Set up the backend environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+`requirements.txt` includes FastAPI, Uvicorn, SQLAlchemy, passlib, python-jose, and related backend dependencies.
+
+7. Run the local FastAPI backend:
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API will be available at `http://127.0.0.1:8000` and the frontend build output is in `dist`.
+
+Notes for Termux
+
+- Termux runs on Android and may require `termux-setup-storage` for shared storage access.
+- If `npm install` fails, ensure `nodejs` is installed and use `npm cache clean --force` before retrying.
+- For backend usage, `psycopg2-binary` may have platform-specific limitations on Android. If you only need the local prototype, the backend can run with SQLite without Postgres.
+
 Vercel deployment (recommended)
 
 1. Push this repository to GitHub.
