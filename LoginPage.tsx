@@ -2,21 +2,37 @@ import { useState } from 'react';
 import { Target, Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
+import { apiFetch } from './lib/api';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would call the FastAPI backend
-    console.log('Logging in...', { email, password });
-    // For now, let's simulate success
-    if (email === 'admin@elitesignal.ai' && password === 'EliteSniper_2026_Access') {
-        navigate('/terminal');
-    } else {
-        alert('Invalid credentials. Check ADMIN_SETUP_GUIDE for defaults.');
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const response = await apiFetch('/token', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.detail || 'Authentication failed.');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+      navigate('/terminal');
+    } catch (err) {
+      console.error('Login error:', err);
+      alert('Login failed. Check backend connection and credentials.');
     }
   };
 

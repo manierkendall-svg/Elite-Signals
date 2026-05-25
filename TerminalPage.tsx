@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
+import { apiFetch } from './lib/api';
 import { useNavigate } from 'react-router-dom';
 
 // TradingView Widget Component
@@ -50,6 +51,7 @@ const TVWidget = ({ symbol, title }: { symbol: string, title: string }) => {
 
 export default function TerminalPage() {
   const [activeTab, setActiveTab] = useState<'terminal' | 'intelligence' | 'vault' | 'settings'>('terminal');
+  const [backendStatus, setBackendStatus] = useState('Connecting...');
   const navigate = useNavigate();
 
   const forexPairs = [
@@ -67,6 +69,19 @@ export default function TerminalPage() {
     { symbol: "BINANCE:BNBUSDT", title: "BNB/USDT" },
     { symbol: "BINANCE:XRPUSDT", title: "XRP/USDT" },
   ];
+
+  useEffect(() => {
+    apiFetch('/').then(async (res) => {
+      if (!res.ok) {
+        throw new Error('Backend response not OK');
+      }
+      const data = await res.json();
+      setBackendStatus(data.status || 'Connected');
+    }).catch((err) => {
+      console.error('Backend health check failed:', err);
+      setBackendStatus('Backend unavailable');
+    });
+  }, []);
 
   return (
     <div className="flex h-screen w-full bg-[#03030b] text-slate-300 overflow-hidden font-sans">
@@ -131,18 +146,13 @@ export default function TerminalPage() {
               <span className="text-[9px] font-black text-[#39FF14] uppercase tracking-tighter">SECURE_OPERATOR: admin_master</span>
             </div>
           </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="hidden lg:flex flex-col items-end">
-              <span className="text-[9px] text-slate-500 uppercase tracking-widest font-mono">System Latency</span>
-              <span className="text-[10px] font-bold text-[#39FF14] font-mono">14ms / AES-256</span>
+            <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-slate-500">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-800 bg-[#0a0a0f]">
+                <Globe size={10} className="text-[#39FF14]" />
+                {backendStatus}
+              </span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1a1a23] to-black border border-[#1a1a23] flex items-center justify-center text-[#39FF14] font-black text-xs">
-              A1
-            </div>
-          </div>
-        </header>
-
+          </header>
         {/* Dynamic Workspace */}
         <div className="flex-1 overflow-y-auto p-8 neon-scrollbar bg-[#03030b]">
           <AnimatePresence mode="wait">

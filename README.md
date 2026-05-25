@@ -2,11 +2,11 @@
 
 > Local prototype for the EliteSignal interface (React + Vite) and a minimal FastAPI backend.
 
-Summary
+## Summary
 - Frontend: React + TypeScript + Vite + TailwindCSS. Interactive login/signup UI and a rich 'Terminal' dashboard.
 - Backend: FastAPI prototype (single-file `main.py`) with simple auth, a signal analysis endpoint and API-key vault stubs.
 
-Quick start (frontend)
+## ⚡ Quick start (frontend)
 
 1. Install dependencies
 
@@ -22,52 +22,333 @@ npm run dev
 # open http://localhost:5173
 ```
 
-Vercel deployment (recommended)
+## 📱 Termux build on Android
 
-1. Push this repository to GitHub.
-2. Sign in to Vercel and import the repository.
-3. Use the default build command:
+This repository can be built inside Termux on Android for the frontend UI and a local FastAPI backend prototype. The commands below assume a working Termux environment and Android storage permissions if you clone outside Termux's home directory.
+
+### 📋 Quick Termux command list
 
 ```bash
+pkg update && pkg upgrade -y
+pkg install git nodejs python
+cd ~/storage/shared
+git clone https://github.com/manierkendall-svg/Elite-Signals.git
+cd Elite-Signals
+npm install
+npm run build
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### 🧰 Full Termux build guide
+
+1. Install Termux from F-Droid, then open it.
+2. Update Termux packages:
+
+```bash
+pkg update && pkg upgrade -y
+```
+
+3. Install required tooling:
+
+```bash
+pkg install git nodejs python
+```
+
+If `nodejs` is unavailable, try `pkg install nodejs-lts`.
+
+4. Clone this repository into Termux home or Android shared storage:
+
+```bash
+cd ~
+git clone https://github.com/manierkendall-svg/Elite-Signals.git
+cd Elite-Signals
+```
+
+If you prefer Android shared storage, grant storage access with `termux-setup-storage` first and then use `cd ~/storage/shared`.
+
+5. Install frontend dependencies and build the app:
+
+```bash
+npm install
 npm run build
 ```
 
-4. Confirm the output directory is `dist`.
-5. Deploy the site. Vercel will host the frontend and provide a public URL.
+This produces the static frontend output in `dist`.
 
-> Note: This deploys only the frontend UI. The FastAPI backend in `main.py` needs separate hosting.
+6. (Optional) Set up the backend environment:
 
-GitHub Actions build
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+`requirements.txt` includes FastAPI, Uvicorn, SQLAlchemy, passlib, python-jose, and related backend dependencies.
+
+7. Run the local FastAPI backend:
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API will be available at `http://127.0.0.1:8000` and the frontend build output is in `dist`.
+
+### 📝 Notes for Termux
+
+- Termux runs on Android and may require `termux-setup-storage` for shared storage access.
+- If `npm install` fails, ensure `nodejs` is installed and use `npm cache clean --force` before retrying.
+- For backend usage, `psycopg2-binary` may have platform-specific limitations on Android. If you only need the local prototype, the backend can run with SQLite without Postgres.
+
+## 🚀 Vercel deployment (recommended)
+
+This repo is ready for Vercel because it is a Vite frontend app that builds into `dist`.
+
+### 🌐 Exact Vercel import steps
+
+1. Visit `https://vercel.com`.
+2. Click **Log in** and choose **GitHub**.
+   - Question: “Which Git provider do you want to use?”
+   - Answer: **GitHub**
+3. Authorize Vercel to access your GitHub account.
+   - Question: “Allow Vercel to access your repositories?”
+   - Answer: **Allow access**
+4. Click **New Project**.
+5. On **Import Project**, choose the repository:
+   - `manierkendall-svg/Elite-Signals`
+6. On **Configure Project**, enter these values:
+
+| Field | Value |
+|---|---|
+| Project Name | `Elite-Signals` (or your preferred name) |
+| Root Directory | leave blank or `/` |
+| Framework Preset | `Vite` |
+| Install Command | `npm install` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+
+7. Add environment variables in the same page or later in Project Settings:
+   - Name: `VITE_API_URL`
+   - Value: `https://your-backend.example.com`
+   - Environment: `Production` (and optionally `Preview` / `Development` if you want the same value everywhere)
+8. Click **Deploy**.
+   - Question: “Ready to Deploy?”
+   - Answer: **Deploy**
+9. Wait for the build logs to complete.
+   - Vercel will run `npm install`, then `npm run build`.
+   - You should see: **Build Completed**
+10. Open the generated deployment URL.
+
+If you use a separate backend host, set `VITE_API_URL` to the backend URL. The frontend now resolves backend requests with `VITE_API_URL` and will fall back to the current site origin if the variable is not set.
+
+If Vercel does not auto-detect Vite, choose the preset manually:
+- Framework Preset: `Vite`
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+## 💻 Vercel CLI deployment
+
+If you prefer to deploy from the command line, install the Vercel CLI and answer the prompts exactly as shown:
+
+```bash
+npm install -g vercel
+cd /workspaces/Elite-Signals
+vercel login
+vercel
+```
+
+Example Vercel CLI prompt flow:
+- “Set up and deploy `Elite-Signals`?”
+  - Answer: `y`
+- “Which scope should it belong to?”
+  - Answer: your GitHub username or team name
+- “Link to existing project?”
+  - Answer: `y` if you already imported it, otherwise `n`
+- “Which directory is your code located in?”
+  - Answer: `.`
+- “What's your build command?”
+  - Answer: `npm run build`
+- “What's your output directory?”
+  - Answer: `dist`
+- “Want to override the settings?”
+  - Answer: `n`
+
+If you need to set environment variables in the CLI deploy, use:
+
+```bash
+vercel env add VITE_API_URL production
+```
+
+Then enter:
+- `https://your-backend.example.com`
+
+### ⚙️ Vercel project settings checklist
+
+- **Git Branch**: `main`
+- **Automatically expose system environment variables**: enabled by default
+- **Environment Variables**:
+  - `VITE_API_URL` = `https://your-backend.example.com`
+- **Root Directory**: `/`
+- **Build & Output Settings**: use the values above
+
+> Note: This deploys only the frontend UI. The FastAPI backend in `main.py` must be hosted separately, and the frontend will call it using `VITE_API_URL`.
+
+### 🔧 Deployment order
+
+Follow this exact order for a working full-stack deployment:
+
+1. **Deploy the backend first**
+   - Choose one of the backend hosts below (Render, Railway, or Heroku).
+   - Set the start command to: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Verify the backend health endpoint is reachable, e.g.:
+     ```bash
+     curl https://your-backend.example.com/
+     ```
+
+2. **Deploy the frontend to Vercel**
+   - Use the dashboard import flow or the CLI.
+   - Root Directory: `/`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+
+3. **Set `VITE_API_URL` in Vercel**
+   - Add the environment variable after the backend is live.
+   - Name: `VITE_API_URL`
+   - Value: `https://your-backend.example.com`
+   - Use the same value for `Production` and `Preview` if desired.
+
+4. **Verify the live app**
+   - Open the Vercel deployment URL.
+   - Test login/signup and `/api/signals/analyze` calls.
+   - Check the browser console for network errors.
+
+### 🧪 Live test checklist
+
+- ✅ Backend health endpoint returns a valid response.
+- ✅ Vercel frontend deploy completes successfully.
+- ✅ `VITE_API_URL` is configured in Vercel.
+- ✅ The React frontend can call backend endpoints.
+- ✅ No blocked network requests or CORS errors in console.
+
+## 🛠️ Backend hosting options
+
+If you want a production backend host, use one of these recommended providers:
+
+### 🧩 Render
+   - URL: https://render.com
+   - Sign in with GitHub and click **New +** > **Web Service**.
+   - Connect the `manierkendall-svg/Elite-Signals` repository.
+   - Service name: `elitesignal-backend`.
+   - Branch: `main`.
+   - Build Command: `pip install -r requirements.txt`.
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Plan: free or starter tier.
+   - Set environment variables in Render:
+     - `SECRET_KEY`
+     - `DATABASE_URL` (if using Postgres)
+     - `PYTHONUNBUFFERED=1`
+
+### 🚄 Railway
+   - URL: https://railway.app
+   - Sign in with GitHub and create a new project.
+   - Choose **Deploy from GitHub repo**.
+   - Select `manierkendall-svg/Elite-Signals`.
+   - Environment: `root directory = .`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Add the same environment variables as above.
+
+### 🐎 Heroku (optional)
+   - URL: https://www.heroku.com
+   - Create a new app and connect your GitHub repo.
+   - Buildpack: `python`.
+   - Procfile content: `web: uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Set `SECRET_KEY` and database variables in Settings.
+
+## 📦 Programs and packages
+
+- Git: https://git-scm.com/
+- Node.js + npm: https://nodejs.org/
+- Python 3: https://www.python.org/
+- Vercel: https://vercel.com/
+- Vercel CLI: `npm install -g vercel`
+- FastAPI: https://fastapi.tiangolo.com/
+- Uvicorn: https://www.uvicorn.org/
+- SQLAlchemy: https://www.sqlalchemy.org/
+- passlib: https://passlib.readthedocs.io/
+- python-jose: https://python-jose.readthedocs.io/
+- python-multipart: https://github.com/tiangolo/fastapi#installation
+- Render: https://render.com
+- Railway: https://railway.app
+
+Required Python packages (from `requirements.txt`):
+
+- `fastapi`
+- `uvicorn[standard]`
+- `sqlalchemy`
+- `passlib[bcrypt]`
+- `python-jose[cryptography]`
+- `python-multipart`
+- `aiofiles`
+- `python-dotenv`
+- `psycopg2-binary` (PostgreSQL only)
+
+Required Node packages (from `package.json`):
+
+- `@tailwindcss/vite`
+- `axios`
+- `lucide-react`
+- `motion`
+- `react`
+- `react-dom`
+- `react-router-dom`
+- `tailwindcss`
+- `@eslint/js`
+- `@types/node`
+- `@types/react`
+- `@types/react-dom`
+- `@vitejs/plugin-react`
+- `eslint`
+- `eslint-plugin-react-hooks`
+- `eslint-plugin-react-refresh`
+- `globals`
+- `typescript`
+- `typescript-eslint`
+- `vite`
+
+## 🧪 GitHub Actions build
 
 - This repo includes a GitHub Actions workflow at `.github/workflows/build-frontend.yml`.
 - The workflow runs on pushes and pull requests to `main`, installs dependencies, builds the Vite app, and uploads the `dist` folder as an artifact.
 - Use this for automatic CI builds even if you do not connect to Vercel.
 
-Android APK build
+## 📱 Android APK build
 
 - A second workflow is available at `.github/workflows/build-android-apk.yml`.
 - It installs Capacitor, initializes an Android project, syncs the built web assets, and builds a release APK.
 - After the workflow succeeds, the APK artifact is uploaded as `elite-signal-android-apk`.
 
-Vercel step
+## 🧩 Vercel step
 
 - You do not need to run the build locally to deploy to Vercel. Vercel will build the repo automatically after you connect it.
 - The only action required from you is to sign in to Vercel and link this GitHub repository.
 - After the first deploy, Vercel will redeploy on every push to your connected branch.
 
-APK / AAB via CI (future)
+## 📦 APK / AAB via CI (future)
 
 - This repo currently builds the web app for deployment and produces a `dist` artifact.
 - To turn it into a true Android APK/AAB, the next step is to add Capacitor or a TWA wrapper and Android SDK build actions.
 - I can help you add that when you are ready, but the current setup already prepares the frontend build and Vercel hosting.
 
-PWA installable app
+## 🌐 PWA installable app
 
 - The frontend now includes a basic `manifest.json` and service worker stub.
 - After deployment, open the site in Chrome and use “Add to Home screen” to install the app.
 - The PWA gives the site a more app-like experience on Android.
 
-Quick start (backend)
+## ⚙️ Quick start (backend)
 
 1. Create a virtualenv and install runtime deps
 
@@ -84,13 +365,13 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 # or: python main.py
 ```
 
-Important files
+## 📌 ## 📌 Important files
 - `App.tsx` — router and routes for `/login`, `/signup`, `/terminal`.
 - `LoginPage.tsx`, `SignupPage.tsx`, `TerminalPage.tsx` — UI pages (present in repo root).
 - `main.py` — FastAPI prototype and example endpoints (`/token`, `/api/signals/analyze`, `/api/vault/keys`).
 - `package.json` — frontend scripts (`dev`, `build`, `preview`) and dependencies.
 
-Notes & developer TODOs
+### 📝 Notes & developer TODOs
 - Default / example credentials and secrets are hard-coded in the prototype:
   - Frontend login form checks for: `admin@elitesignal.ai` / `EliteSniper_2026_Access` (client-side stub).
   - Backend token endpoint accepts: `admin_master` / `EliteSniper_2026_Access` and uses `SECRET_KEY = "ELITE_SNIPER_SECRET_QUANTUM_KEY"` in `main.py`.
