@@ -149,6 +149,42 @@ If Vercel does not auto-detect Vite, choose the preset manually:
 - Build Command: `npm run build`
 - Output Directory: `dist`
 
+Vercel CLI deployment
+
+If you prefer to deploy from the command line, install the Vercel CLI and answer the prompts exactly as shown:
+
+```bash
+npm install -g vercel
+cd /workspaces/Elite-Signals
+vercel login
+vercel
+```
+
+Example Vercel CLI prompt flow:
+- “Set up and deploy `Elite-Signals`?”
+  - Answer: `y`
+- “Which scope should it belong to?”
+  - Answer: your GitHub username or team name
+- “Link to existing project?”
+  - Answer: `y` if you already imported it, otherwise `n`
+- “Which directory is your code located in?”
+  - Answer: `.`
+- “What's your build command?”
+  - Answer: `npm run build`
+- “What's your output directory?”
+  - Answer: `dist`
+- “Want to override the settings?”
+  - Answer: `n`
+
+If you need to set environment variables in the CLI deploy, use:
+
+```bash
+vercel env add VITE_API_URL production
+```
+
+Then enter:
+- `https://your-backend.example.com`
+
 Vercel project settings checklist
 
 - **Git Branch**: `main`
