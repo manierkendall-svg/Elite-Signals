@@ -104,23 +104,61 @@ Notes for Termux
 
 Vercel deployment (recommended)
 
-1. Push this repository to GitHub.
-2. Sign in to Vercel and import the repository.
-3. Configure the project using these exact values:
+This repo is ready for Vercel because it is a Vite frontend app that builds into `dist`.
 
-- Root Directory: leave blank or set to `/`
+Exact Vercel import steps
+
+1. Visit `https://vercel.com`.
+2. Click **Log in** and choose **GitHub**.
+   - Question: “Which Git provider do you want to use?”
+   - Answer: **GitHub**
+3. Authorize Vercel to access your GitHub account.
+   - Question: “Allow Vercel to access your repositories?”
+   - Answer: **Allow access**
+4. Click **New Project**.
+5. On **Import Project**, choose the repository:
+   - `manierkendall-svg/Elite-Signals`
+6. On **Configure Project**, enter these values:
+
+| Field | Value |
+|---|---|
+| Project Name | `Elite-Signals` (or your preferred name) |
+| Root Directory | leave blank or `/` |
+| Framework Preset | `Vite` |
+| Install Command | `npm install` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+
+7. Add environment variables in the same page or later in Project Settings:
+   - Name: `VITE_API_URL`
+   - Value: `https://your-backend.example.com`
+   - Environment: `Production` (and optionally `Preview` / `Development` if you want the same value everywhere)
+8. Click **Deploy**.
+   - Question: “Ready to Deploy?”
+   - Answer: **Deploy**
+9. Wait for the build logs to complete.
+   - Vercel will run `npm install`, then `npm run build`.
+   - You should see: **Build Completed**
+10. Open the generated deployment URL.
+
+If you use a separate backend host, set `VITE_API_URL` to the backend URL. The frontend now resolves backend requests with `VITE_API_URL` and will fall back to the current site origin if the variable is not set.
+
+If Vercel does not auto-detect Vite, choose the preset manually:
 - Framework Preset: `Vite`
 - Install Command: `npm install`
 - Build Command: `npm run build`
 - Output Directory: `dist`
 
-4. Add the frontend environment variable:
+Vercel project settings checklist
 
-- `VITE_API_URL` = `https://your-backend.example.com`
+- **Git Branch**: `main`
+- **Automatically expose system environment variables**: enabled by default
+- **Environment Variables**:
+  - `VITE_API_URL` = `https://your-backend.example.com`
+- **Root Directory**: `/`
+- **Build & Output Settings**: use the values above
 
-5. Deploy the site. Vercel will host the frontend and provide a public URL.
-
-> Note: This deploys only the frontend UI. The FastAPI backend in `main.py` needs separate hosting. The frontend now uses `VITE_API_URL` to locate the backend if configured.
+> Note: This deploys only the frontend UI. The FastAPI backend in `main.py` must be hosted separately, and the frontend will call it using `VITE_API_URL`.
 
 GitHub Actions build
 
