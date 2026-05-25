@@ -102,7 +102,7 @@ Notes for Termux
 - If `npm install` fails, ensure `nodejs` is installed and use `npm cache clean --force` before retrying.
 - For backend usage, `psycopg2-binary` may have platform-specific limitations on Android. If you only need the local prototype, the backend can run with SQLite without Postgres.
 
-Vercel deployment (recommended)
+🚀 Vercel deployment (recommended)
 
 This repo is ready for Vercel because it is a Vite frontend app that builds into `dist`.
 
@@ -149,7 +149,7 @@ If Vercel does not auto-detect Vite, choose the preset manually:
 - Build Command: `npm run build`
 - Output Directory: `dist`
 
-Vercel CLI deployment
+💻 Vercel CLI deployment
 
 If you prefer to deploy from the command line, install the Vercel CLI and answer the prompts exactly as shown:
 
@@ -185,7 +185,7 @@ vercel env add VITE_API_URL production
 Then enter:
 - `https://your-backend.example.com`
 
-Vercel project settings checklist
+### ⚙️ Vercel project settings checklist
 
 - **Git Branch**: `main`
 - **Automatically expose system environment variables**: enabled by default
@@ -196,11 +196,48 @@ Vercel project settings checklist
 
 > Note: This deploys only the frontend UI. The FastAPI backend in `main.py` must be hosted separately, and the frontend will call it using `VITE_API_URL`.
 
-Backend hosting options
+### 🔧 Deployment order
+
+Follow this exact order for a working full-stack deployment:
+
+1. **Deploy the backend first**
+   - Choose one of the backend hosts below (Render, Railway, or Heroku).
+   - Set the start command to: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+   - Verify the backend health endpoint is reachable, e.g.:
+     ```bash
+     curl https://your-backend.example.com/
+     ```
+
+2. **Deploy the frontend to Vercel**
+   - Use the dashboard import flow or the CLI.
+   - Root Directory: `/`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+
+3. **Set `VITE_API_URL` in Vercel**
+   - Add the environment variable after the backend is live.
+   - Name: `VITE_API_URL`
+   - Value: `https://your-backend.example.com`
+   - Use the same value for `Production` and `Preview` if desired.
+
+4. **Verify the live app**
+   - Open the Vercel deployment URL.
+   - Test login/signup and `/api/signals/analyze` calls.
+   - Check the browser console for network errors.
+
+### 🧪 Live test checklist
+
+- ✅ Backend health endpoint returns a valid response.
+- ✅ Vercel frontend deploy completes successfully.
+- ✅ `VITE_API_URL` is configured in Vercel.
+- ✅ The React frontend can call backend endpoints.
+- ✅ No blocked network requests or CORS errors in console.
+
+🛠️ Backend hosting options
 
 If you want a production backend host, use one of these recommended providers:
 
-1. Render
+### 🧩 Render
    - URL: https://render.com
    - Sign in with GitHub and click **New +** > **Web Service**.
    - Connect the `manierkendall-svg/Elite-Signals` repository.
@@ -214,7 +251,7 @@ If you want a production backend host, use one of these recommended providers:
      - `DATABASE_URL` (if using Postgres)
      - `PYTHONUNBUFFERED=1`
 
-2. Railway
+### 🚄 Railway
    - URL: https://railway.app
    - Sign in with GitHub and create a new project.
    - Choose **Deploy from GitHub repo**.
@@ -223,14 +260,14 @@ If you want a production backend host, use one of these recommended providers:
    - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`.
    - Add the same environment variables as above.
 
-3. Heroku (optional)
+### 🐎 Heroku (optional)
    - URL: https://www.heroku.com
    - Create a new app and connect your GitHub repo.
    - Buildpack: `python`.
    - Procfile content: `web: uvicorn main:app --host 0.0.0.0 --port $PORT`.
    - Set `SECRET_KEY` and database variables in Settings.
 
-Programs and packages
+📦 Programs and packages
 
 - Git: https://git-scm.com/
 - Node.js + npm: https://nodejs.org/
