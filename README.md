@@ -233,6 +233,38 @@ Follow this exact order for a working full-stack deployment:
 - ✅ The React frontend can call backend endpoints.
 - ✅ No blocked network requests or CORS errors in console.
 
+## 📣 GitHub Pages deployment
+
+This project can be deployed for free on GitHub Pages as a static site.
+
+### Setup
+
+1. Install dependencies:
+  ```bash
+  npm install
+  ```
+
+2. Build the app:
+  ```bash
+  npm run build
+  ```
+
+3. Deploy:
+  ```bash
+  npm run deploy
+  ```
+
+### Result
+
+The site will be published to:
+- `https://manierkendall-svg.github.io/Elite-Signals/`
+
+### Notes
+
+- `vite.config.ts` is configured with `base: '/Elite-Signals/'` so asset and route paths resolve correctly.
+- `App.tsx` uses `import.meta.env.BASE_URL` for router base routing on GitHub Pages.
+- `postbuild` copies `dist/index.html` into `dist/404.html` so direct SPA links work on GitHub Pages.
+
 ## 🛠️ Backend hosting options
 
 If you want a production backend host, use one of these recommended providers:

@@ -10,10 +10,11 @@ const TerminalPage = () => (
     </h1>
   </div>
 );
+const basename = import.meta.env.BASE_URL;
 
 function App() {
   return (
-    <Router>
+    <Router basename={basename}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
